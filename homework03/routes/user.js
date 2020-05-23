@@ -5,6 +5,32 @@ let statusCode = require('../modules/statusCode');
 let util = require('../modules/util');
 let User = require('../models/user');
 
+const crypto = require('crypto');
+
+router.post('/signup', async (req,res)=>{
+  const {id, name, password, email} = req.body;
+
+  // null 값 확인
+  if(!id || !name || !password || !email)
+    res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST,responseMessage.NULL_VALUE));
+
+  // already ID
+  const user = User.filter(user => user.id == id);
+  if(user.length > 0)
+    res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST,responseMessage.ALREADY_ID));
+
+  // password hash 해서 salt 값과 같이 저장 (level_2)
+  const salt = crypto.randomBytes(32).toString();
+  const hashedPassword = crypto.pbkdf2Sync(password, salt, 1, 32, 'sha512').toString('hex');
+  User.push({id, name, password: hashedPassword, salt, email});
+
+  // console.log(salt);
+  // console.log(hashedPassword);
+
+  //성공
+  res.status(statusCode.CREATED).send(util.success(statusCode.CREATED,responseMessage.CREATED_USER, {userId : id}));
+});
+
 router.post('/signin', async(req,res)=>{
   const {id, password} = req.body;
 
