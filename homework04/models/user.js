@@ -45,7 +45,21 @@ const user = {
             throw err;
         }
     },
-
+    getUserById : async (id) => {
+        const query = `SELECT * FROM ${table} WHERE id = "${id}";`
+        try{
+            const result = await pool.queryParam(query);
+            const userDto = {
+                id : result[0].id,
+                name : result[0].name,
+                email : result[0].email
+            }
+            return userDto;
+        } catch(err){
+            console.log('getUserById ERROR : ', err);
+            throw err;
+        }
+    }
 }
 
 module.exports = user;

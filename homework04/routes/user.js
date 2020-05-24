@@ -57,4 +57,21 @@ router.post('/signin', async(req,res)=>{
     }
 });
 
+router.get('/profile/:id',async(req,res)=>{
+    const id = req.params.id;
+
+    try{
+        // 존재하지 않는 아이디
+        if(await User.checkUser(id) === false)
+            return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST,responseMessage.NO_USER));
+
+        // 성공
+        const user = await User.getUserById(id);
+        return res.status(statusCode.OK).send(util.success(statusCode.OK,responseMessage.READ_PROFILE_SUCCESS, user));
+    } catch(err){
+        return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, err.message));
+        throw err;
+    }
+});
+
 module.exports = router;
