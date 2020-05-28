@@ -12,7 +12,7 @@
 <img src ="README_IMG/postBlog-img.png">
 
 - 게시글 고유 id값을 가진 게시글 수정
-<img src ="README_IMG/putPost-toekn-img.png">
+<img src ="README_IMG/putPost-token-img.png">
 <img src ="README_IMG/putPost-img.png">
 
 - 게시글 고유 id값을 가진 게시글 삭제
